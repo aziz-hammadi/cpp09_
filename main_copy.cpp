@@ -6,7 +6,7 @@
 /*   By: ahammad <ahammad@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 10:52:38 by ahammad           #+#    #+#             */
-/*   Updated: 2023/04/13 17:39:09 by ahammad          ###   ########.fr       */
+/*   Updated: 2023/04/14 14:40:07 by ahammad          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,12 +165,12 @@ void read_input(const std::string &filename, char delimiter)
                 std::map<Date, float, std::greater<Date> >::iterator result;
                 result = dateValues.lower_bound(date);
                 if (result != dateValues.end())
-                    valueresult = result->second;
+                    valueresult = result->second * value;
             }
             else
             {
-                std::cout << "find_date : " << find_date->second << std::endl;
-                valueresult = find_date->second;
+                //std::cout << "find_date : " << find_date->second << std::endl;
+                valueresult = find_date->second * value;
             }
 
             //std::cout << "_result_1 :" << result << std::endl;
