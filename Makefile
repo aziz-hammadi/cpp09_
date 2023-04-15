@@ -6,11 +6,11 @@
 #    By: ahammad <ahammad@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/01/29 11:44:46 by ahammad           #+#    #+#              #
-#    Updated: 2023/04/13 16:07:29 by ahammad          ###   ########.fr        #
+#    Updated: 2023/04/15 16:14:02 by ahammad          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS	=	main_copy.cpp
+SRCS	=	main_f.cpp
 OBJS	=	$(SRCS:.cpp=.o)
 CFLAGS	=	-Wall -Wextra -Werror -std=c++98
 NAME	=	btc

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_copy.cpp                                      :+:      :+:    :+:   */
+/*   main_f.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ahammad <ahammad@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/30 10:52:38 by ahammad           #+#    #+#             */
-/*   Updated: 2023/04/15 15:36:07 by ahammad          ###   ########.fr       */
+/*   Updated: 2023/04/15 17:32:40 by ahammad          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,15 +104,14 @@ std::map<Date, float, std::greater<Date> > parse_csv(const std::string &data_csv
     std::getline(file_csv, line);
     while (std::getline(file_csv, line))
     {
-        //std::cout << "line : " << line << std::endl;
         size_t virgule = line.find_first_of(delimiter);
         Date date = trim(line.substr(0, virgule));
         std::string value_str = trim(line.substr(virgule + 1));
+
         try 
         {
             float value;// = stof(value_str);
             sscanf(value_str.c_str(), "%f", &value);
-            //value = stof(value_str);
             values.insert(std::make_pair(date, value));
         }
         catch (const std::invalid_argument &e) {
@@ -138,57 +137,30 @@ void read_input(const std::string &filename, char delimiter)
             if (!date.is_valid())
                 throw std::invalid_argument("bad input => " + date.input());
             std::string value_str = trim(line.substr(virgule + 1));
-            //float value = stof(value_str);
-            float value;// = stof(value_str);
+            float value;
             sscanf(value_str.c_str(), "%f", &value);
-            //value = stof(value_str);
             check_value(value);
-            /*float result = 0.0;
-            //std::cout << "data_csv DATE dateValues[date] :" << date << std::endl;
-            //std::cout << "dateValues[date] :" << dateValues[date];
-            //std::cout << " _value :" << value<< std::endl;
-            //std::cout << " _result_1 :" << result << std::endl;
-            result = dateValues.lower_bound(date)->second * value;
-            if (dateValues.find(date) == dateValues.end())
-            {
-                result = dateValues.lower_bound(date)->second * value;
-            }
-*/
 
             float valueresult = std::numeric_limits<float>::max();
-            //dateValues.lower_bound(date);
-            //std::map<Date, float, std::greater<Date> >::iterator result = dateValues.lower_bound(date);
-            //result = dateValues.lower_bound(date)->second * value;
+
             std::map<Date, float, std::greater<Date> >::iterator find_date = dateValues.find(date);
+            std::cout << "value input : " << value << std::endl;
+            std::cout << "date input : " << date.year() << date.month() << date.day()<< std::endl;
             
             if (find_date == dateValues.end())
             {
                 std::map<Date, float, std::greater<Date> >::iterator result;
                 result = dateValues.lower_bound(date);
+                std::cout << "RESULT : " << result->second << std::endl;
                 if (result != dateValues.end())
                     valueresult = result->second * value;
             }
             else
             {
-                //std::cout << "find_date : " << find_date->second << std::endl;
                 valueresult = find_date->second * value;
             }
-
-            //std::cout << "_result_1 :" << result << std::endl;
-            /*
-            std::map<Date, int>::iterator it = dateValues.lower_bound(date);
-            if (it == dateValues.end())
-            {
-                std::cout << "Error: no date found." << std::endl;
-                return;
-            }
-            if (it->first < date)
-            {
-                std::cout << "Error: invalid date." << std::endl;
-                return;
-            }
-            result = it->second * value;*/
-
+            std::cout << "value data.csv : " << find_date->second << std::endl;
+    
 			std::cout << std::setw(2) << std::setfill('0') << date.year();
 			std::cout << '-';
 			std::cout << std::setw(2) << std::setfill('0') << date.month();
@@ -223,34 +195,3 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
-    // if (argc == 2)
-    // {
-    //     BitcoinExchange change;
-        
-    //     if (!check_file_csv("data.csv"))
-    //     {
-    //         std::cerr << "Error file : data.csv" << std::endl;
-    //     }
-
-    //     std::ifstream input_txt(argv[1]);
-    //     //std::getline (input_txt, line);
-    //     //std::cout << "line : " << line <<std::endl;
-    //     if (input_txt.fail())
-    //     {
-    //         std::cerr << "Error could don't open FILE "<< argv[1] << std::endl;
-    //         return (0);
-    //     }
-    //     else
-    //     {
-    //         //verifier erreur input txt
-    //         check_file_txt(argv[1]);
-    //     }
-
-    //     change.print_value_change(date, value);
-
-	// 	//envoie fichier correcte pour le tester 
-
-    // }
-
-    // else
-    //     std::cerr << "besoin du fichier input.txt" << std::endl;
