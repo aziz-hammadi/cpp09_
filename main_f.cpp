@@ -123,7 +123,7 @@ std::map<Date, float, std::greater<Date> > parse_csv(const std::string &data_csv
 
 void read_input(const std::string &filename, char delimiter)
 {
-    std::map<Date, float, std::greater<Date> > dateValues = parse_csv("data_c.csv", ',');
+    std::map<Date, float, std::greater<Date> > dateValues = parse_csv("data_c.csv", ','); //data.csv
     std::ifstream file(filename.c_str());
     if(file.fail())
         throw std::invalid_argument("echec open file : " + filename);
@@ -134,6 +134,7 @@ void read_input(const std::string &filename, char delimiter)
         size_t virgule = line.find_first_of(delimiter);
         try {
             Date date = trim(line.substr(0, virgule));
+			std::cout << "date.year() : " << date.year() << " date.day() : " << date.day() << std::endl;
             if (!date.is_valid())
                 throw std::invalid_argument("bad input => " + date.input());
             std::string value_str = trim(line.substr(virgule + 1));
@@ -143,7 +144,7 @@ void read_input(const std::string &filename, char delimiter)
 
             float valueresult = std::numeric_limits<float>::max();
 
-            std::map<Date, float, std::greater<Date> >::iterator find_date = dateValues.find(date);
+            std::map<Date, float, std::greater<Date> >::iterator find_date = dateValues.find(date); //input.txt
             std::cout << "value input : " << value << std::endl;
             std::cout << "date input : " << date.year() << date.month() << date.day()<< std::endl;
             
