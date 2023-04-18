@@ -66,16 +66,32 @@ public:
         }
     }
 
+	/*std::ofstream operator<<(const Date &date) const
+	{
+		std::string dat_tmp;
+		dat_tmp += "_years : " ; 
+		dat_tmp += _year;
+		dat_tmp += " _month : " ; 
+		dat_tmp += _month;
+		dat_tmp += " _day : " ; 
+		dat_tmp += _day;
+		dat_tmp += " _input : " ; 
+		dat_tmp += _input;
+		dat_tmp += " _is_valid : " ; 
+		dat_tmp += _is_valid;
+		return (std::ofstream)(dat_tmp);
+	}*/
+
     bool operator<(const Date &date) const
     {
-        if (date._year > this->_year || date._month > this->_month || date._day > this->_day)
+        if (this->_input < date._input)// || this->_month < date._month || this->_day < date._day)
             return true;
         return false;
     }
 
     bool operator>(const Date &date) const
     {
-        if (date._year < this->_year || date._month < this->_month || date._day < this->_day)
+        if (this->_input > date._input) // || this->_month > date._month || this->_day > date._day)
             return true;
         return false;
     }
@@ -86,7 +102,7 @@ public:
     bool is_valid() const { return this->_is_valid; }
     std::string input() const { return this->_input; }
 
-private:
+public:
     std::string _input;
     bool _is_valid;
     int _year;
@@ -94,13 +110,54 @@ private:
     int _day;
 };
 
-std::map<Date, float, std::greater<Date> > parse_csv(const std::string &data_csv, char delimiter)
+struct compare 
+{
+    bool operator()(const Date& date_csv, const Date& date_txt) const
+	{
+        if (date_csv._input < date_txt._input)// || date_csv.month() < date_txt.month() || date_csv.day() < date_txt.day())
+		{            
+			std::cout << "if operator true : " << date_csv._input << "|| " << date_txt._input << std::endl;
+			return true;
+		}
+			std::cout << "if operator false : " << date_csv._input << "|| " << date_txt._input << std::endl;
+
+        return false;
+    }
+};
+
+
+	/*bool compare(const Date &date_csv, const Date &date_txt)
+    {
+        if (date_csv.year() < date_txt.year() || date_csv.month() < date_txt.month() || date_csv.day() < date_txt.day())
+            return true;
+        return false;
+    }*/
+
+void	print_map(std::map<Date, float, compare> printed_map)
+{
+	std::map<Date, float, compare>::iterator it = printed_map.begin();
+	std::map<Date, float, compare>::iterator ite = printed_map.end();
+	while (it != ite)
+	{
+		std::cout<<"it->first : " << (it)->first._year <<(it)->first._month << (it)->first._day<< " it->second : " << it->second <<std::endl;
+		it++;
+	}
+}
+
+    // bool operator>(const Date &date_csv, const Date &date_txt)
+    // {
+    //     if (date_csv.year() > date_txt.year() || date_csv.month() > date_txt.month() || date_csv.day() > date_txt.day())
+    //         return true;
+    //     return false;
+    // }
+
+std::map<Date, float, compare> parse_csv(const std::string &data_csv, char delimiter)
 {
     std::ifstream file_csv(data_csv.c_str());
     if(file_csv.fail())
-        throw std::invalid_argument("echec open file : " + data_csv);
+        throw std::invalid_argument("fail open file : " + data_csv);
     std::string line;
-    std::map<Date, float, std::greater<Date> > values;
+    std::map<Date, float, compare> values;
     std::getline(file_csv, line);
     while (std::getline(file_csv, line))
     {
@@ -120,13 +177,30 @@ std::map<Date, float, std::greater<Date> > parse_csv(const std::string &data_csv
     }
     return values;
 }
+void print_date(Date date)
+{
+	std::cout << std::setw(2) << std::setfill('0') << date.year();
+	std::cout << '-';
+	std::cout << std::setw(2) << std::setfill('0') << date.month();
+	std::cout << '-';
+	std::cout << std::setw(2) << std::setfill('0') << date.day();
+}
+void print_value(float value)
+	{
+    std::cout /*<< date.input()*/ << " => " << value << " = " << "PAS DE VALEUR "<< std::endl;
+	}
+
+void print_value(float value, float valueresult)
+	{
+    std::cout /*<< date.input()*/ << " => " << value << " = " << valueresult /*value ou result*/<< std::endl;
+	}
 
 void read_input(const std::string &filename, char delimiter)
 {
-    std::map<Date, float, std::greater<Date> > dateValues = parse_csv("data_c.csv", ','); //data.csv
+    std::map<Date, float, compare> dateValues = parse_csv("data_c.csv", ','); //data.csv
     std::ifstream file(filename.c_str());
     if(file.fail())
-        throw std::invalid_argument("echec open file : " + filename);
+        throw std::invalid_argument("fail open file : " + filename);
     std::string line;
     std::getline(file, line); 
     while (std::getline(file, line))
@@ -134,7 +208,7 @@ void read_input(const std::string &filename, char delimiter)
         size_t virgule = line.find_first_of(delimiter);
         try {
             Date date = trim(line.substr(0, virgule));
-			std::cout << "date.year() : " << date.year() << " date.day() : " << date.day() << std::endl;
+			std::cout << "date.year() : " << date.year() << "date.year() : " << date.month() <<" date.day() : " << date.day() << std::endl;
             if (!date.is_valid())
                 throw std::invalid_argument("bad input => " + date.input());
             std::string value_str = trim(line.substr(virgule + 1));
@@ -144,31 +218,53 @@ void read_input(const std::string &filename, char delimiter)
 
             float valueresult = std::numeric_limits<float>::max();
 
-            std::map<Date, float, std::greater<Date> >::iterator find_date = dateValues.find(date); //input.txt
-            std::cout << "value input : " << value << std::endl;
-            std::cout << "date input : " << date.year() << date.month() << date.day()<< std::endl;
-            
+            std::map<Date, float, compare>::iterator find_date = dateValues.upper_bound(date); //input.txt
+            //std::cout << "value input : " << value << std::endl;
+            //std::cout << "date input : " << date.year() << date.month() << date.day()<< std::endl;
             if (find_date == dateValues.end())
             {
-                std::map<Date, float, std::greater<Date> >::iterator result;
-                result = dateValues.lower_bound(date);
-                std::cout << "RESULT : " << result->second << std::endl;
-                if (result != dateValues.end())
-                    valueresult = result->second * value;
+				//print_map(dateValues);    
+				//std::cout<< "IF" << std::endl;
+                //std::map<Date, float >::iterator result;
+				print_map(dateValues);
+				print_date(date);
+				print_value(value);
+                //result = dateValues.lower_bound(date);
+				//std::cout << "RESULT : " << result->second << std::endl;
+/*                if (result != dateValues.end())
+                {
+					valueresult = result->second * value;
+					print_date(date);
+					print_value(value, valueresult); 
+				}
+				else
+				{
+					std::cout << "HERE" << std::endl;
+					print_date(date);
+					print_value(value);*/
+					//std::cout << "pas date trouver" << std::endl;
+//				}
+				//std::cout << "valueresult_IF : " <<valueresult << std::endl;
             }
             else
             {
+				//std::cout<< "ELSE" << std::endl;
+				std::cout << "find_date : " << find_date->first._input <<std::endl;
                 valueresult = find_date->second * value;
+	            //std::cout << "valueresult_ELSE : " <<valueresult << std::endl;
+				print_date(date);
+				print_value(value, valueresult); 
             }
-            std::cout << "value data.csv : " << find_date->second << std::endl;
-    
-			std::cout << std::setw(2) << std::setfill('0') << date.year();
-			std::cout << '-';
-			std::cout << std::setw(2) << std::setfill('0') << date.month();
-			std::cout << '-';
-			std::cout << std::setw(2) << std::setfill('0') << date.day();
-            std::cout /*<< date.input()*/ << " => " << value << " = " << valueresult /*value ou result*/<< std::endl;
-        }
+            //std::cout << "VALUE : " << value << std::endl;
+			//std::cout << "find_date->first" << find_date->first << std::endl;; //operator<<
+			if (find_date != dateValues.end())
+            	std::cout << "value data.csv : " << find_date->second << std::endl;
+
+		/*print_date(date);
+		print_value(value, valueresult);
+		print_value(value);*/
+		//print_map(dateValues);    
+		}
         catch (const std::invalid_argument &e) {
             std::cout << "Error: " << e.what() << std::endl;
         }
@@ -182,6 +278,11 @@ int main(int argc, char *argv[])
         std::cout << "need input.txt on argument" << std::endl;
         return (0);
     }
+	else if  (argc != 2)
+	{
+		std::cout << "just need input.txt" << std::endl;
+		return (0);
+	}
     try
     {
         read_input(argv[1], '|');
@@ -196,3 +297,9 @@ int main(int argc, char *argv[])
     }
     return 0;
 }
+
+
+//date en string
+//map trier clef en string (date) sans la classe date
+//compare en string avec input
+//upper ou lower a verifier 
