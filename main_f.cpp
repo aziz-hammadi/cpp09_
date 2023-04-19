@@ -100,7 +100,6 @@ public:
     int month() const { return this->_month; }
     int day() const { return this->_day; }
     bool is_valid() const { return this->_is_valid; }
-    std::string input() const { return this->_input; }
 
 public:
     std::string _input;
@@ -218,7 +217,7 @@ void read_input(const std::string &filename, char delimiter)
 
             float valueresult = std::numeric_limits<float>::max();
 
-            std::map<Date, float, compare>::iterator find_date = dateValues.upper_bound(date); //input.txt
+            std::map<Date, float, compare>::iterator find_date = dateValues.lower_bound(date); //input.txt
             //std::cout << "value input : " << value << std::endl;
             //std::cout << "date input : " << date.year() << date.month() << date.day()<< std::endl;
             if (find_date == dateValues.end())
