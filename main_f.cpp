@@ -100,6 +100,7 @@ public:
     int month() const { return this->_month; }
     int day() const { return this->_day; }
     bool is_valid() const { return this->_is_valid; }
+    std::string input() const { return this->_input; }
 
 public:
     std::string _input;
