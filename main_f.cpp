@@ -53,7 +53,8 @@ public:
         : _input(date)
     {
         struct tm tm;
-        if (strptime(date.c_str(), "%Y-%m-%d", &tm))
+		char *ret = strptime(date.c_str(), "%Y-%m-%d", &tm);
+        if (ret && *ret == '\0')
         {
             this->_year = tm.tm_year + 1900;
             this->_month = tm.tm_mon + 1;
@@ -114,12 +115,12 @@ struct compare
 {
     bool operator()(const Date& date_csv, const Date& date_txt) const
 	{
-        if (date_csv._input < date_txt._input)// || date_csv.month() < date_txt.month() || date_csv.day() < date_txt.day())
+        if (date_csv._input > date_txt._input)// || date_csv.month() < date_txt.month() || date_csv.day() < date_txt.day())
 		{            
-			std::cout << "if operator true : " << date_csv._input << "|| " << date_txt._input << std::endl;
+			//std::cout << "if operator true : " << date_csv._input << "|| " << date_txt._input << std::endl;
 			return true;
 		}
-			std::cout << "if operator false : " << date_csv._input << "|| " << date_txt._input << std::endl;
+			//std::cout << "if operator false : " << date_csv._input << "|| " << date_txt._input << std::endl;
 
         return false;
     }
@@ -165,7 +166,9 @@ std::map<Date, float, compare> parse_csv(const std::string &data_csv, char delim
         Date date = trim(line.substr(0, virgule));
         std::string value_str = trim(line.substr(virgule + 1));
 
-        try 
+		/*if dateisvalid() false 
+			throw std::runtime_error("bad date CSV: " + date.input());
+        */try 
         {
             float value;// = stof(value_str);
             sscanf(value_str.c_str(), "%f", &value);
@@ -208,7 +211,7 @@ void read_input(const std::string &filename, char delimiter)
         size_t virgule = line.find_first_of(delimiter);
         try {
             Date date = trim(line.substr(0, virgule));
-			std::cout << "date.year() : " << date.year() << "date.year() : " << date.month() <<" date.day() : " << date.day() << std::endl;
+			//std::cout << "date.year() : " << date.year() << "date.year() : " << date.month() <<" date.day() : " << date.day() << std::endl;
             if (!date.is_valid())
                 throw std::invalid_argument("bad input => " + date.input());
             std::string value_str = trim(line.substr(virgule + 1));
@@ -249,7 +252,7 @@ void read_input(const std::string &filename, char delimiter)
             else
             {
 				//std::cout<< "ELSE" << std::endl;
-				std::cout << "find_date : " << find_date->first._input <<std::endl;
+				//std::cout << "find_date : " << find_date->first._input <<std::endl;
                 valueresult = find_date->second * value;
 	            //std::cout << "valueresult_ELSE : " <<valueresult << std::endl;
 				print_date(date);
@@ -260,9 +263,9 @@ void read_input(const std::string &filename, char delimiter)
 			if (find_date != dateValues.end())
             	std::cout << "value data.csv : " << find_date->second << std::endl;
 
-		/*print_date(date);
-		print_value(value, valueresult);
-		print_value(value);*/
+		//print_date(date);
+		//print_value(value, valueresult);
+		//print_value(value);
 		//print_map(dateValues);    
 		}
         catch (const std::invalid_argument &e) {
