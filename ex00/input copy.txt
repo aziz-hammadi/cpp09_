@@ -1,0 +1,16 @@
+date | value
+2012-01-11 | --1s
+2012-01-11 | --1000
+2012-01-11 | 2.2.2
+2026-02-29 | 2.2
+2024-02-29 | 2.2
+2024-02-31 | 2.2
+/*
+
+FEV = 28
+Si ANNEE % 4 == 0
+    0 < FEV > 29
+si MOIS < 8
+    31 POUR LES MOIS IMPAIRES
+sinon
+    31 POUR LES PAIRES
