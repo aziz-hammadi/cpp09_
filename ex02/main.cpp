@@ -9,7 +9,7 @@ int main (int argc, char **argv)
     }
     try 
     {
-        PmergeMe pmergeme(argc, argv);
+        PmergeMe pmergeme(argv);
     }
     catch (std::exception &e)
     {
