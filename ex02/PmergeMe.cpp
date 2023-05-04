@@ -1,20 +1,26 @@
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe (char **argv) 
+//PmergeMe::~PmergeMe() {};
+PmergeMe::PmergeMe(const PmergeMe &) {};
+PmergeMe& PmergeMe::operator = (const PmergeMe &){return *this;};
+
+PmergeMe::PmergeMe (int argc, char **argv) 
 {
     std::vector<int> use_vector;
     std::deque<int> use_deque;
 
     int i;
-    i = 0;
-    while (argv[1][i] < '\n')
+    i = 1;
+    while (i < argc)
     {
         check_arg(argv[i]);
         use_vector.push_back(atoi(argv[i]));
         use_deque.push_back(atoi(argv[i]));
+        i++;
     }
-    std::cout << "Before\t";
+    std::cout << "Before :\t";
     print_Container(use_vector);
+    std::cout << "\n";
 
     clock_t init = clock();
     use_vector = merge_sort(use_vector);
@@ -24,9 +30,9 @@ PmergeMe::PmergeMe (char **argv)
     use_deque = merge_sort(use_deque);
     double duration_deque = 1000 * (clock() - init ) / (double) CLOCKS_PER_SEC;
 
-    std::cout << "After\t";
+    std::cout << "After :\t\t";
     print_Container(use_vector);
-	std::cout << "Time to process a range of " << use_vector.size() << " elements with std::vector : " << duration_vector << std::endl;
+	std::cout << "\nTime to process a range of " << use_vector.size() << " elements with std::vector : " << duration_vector << std::endl;
 	std::cout << "Time to process a range of " << use_deque.size() << " elements with std::deque : " << duration_deque << std::endl;
 }
 
@@ -88,18 +94,18 @@ template <typename T> void PmergeMe::print_Container(T& container)
 }
 
 void PmergeMe::check_arg(std::string argv)
-{
+{    
     if (argv.size() == 0)
         throw std::invalid_argument("bad argument : Error empty argument => " + argv); 
     size_t i;
-    i = 0;
-    while (i < argv.length())
+    i = 1;
+    while (i < argv.size())
     {
-        if (!isdigit(argv[1]))
+        if (!isdigit(argv[i]))
             throw std::invalid_argument("bad argument is not DIGIT => " + argv);
         ++i;
     }
 	int nbr_argv = std::atoi(argv.c_str());
-	if (argv.size() > 10 || nbr_argv > INT_MAX)
-        throw std::invalid_argument("bad argument is not POSITIVE INT => " + argv);
+	if (argv.size() > 10 || nbr_argv > INT_MAX || nbr_argv >= 0)
+        throw std::invalid_argument("bad argument is not POSITIVE INT => " + argv[i] );
 }

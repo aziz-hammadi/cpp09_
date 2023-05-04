@@ -14,7 +14,7 @@ private:
 	PmergeMe& operator = (const PmergeMe &);
 
 public:	
-	PmergeMe(char **av);
+	PmergeMe(int argc, char **av);
 	//~PmergeMe();
     void    check_arg(std::string argv);
 	template <typename T> void insertion_sort(T& container);
