@@ -9,13 +9,8 @@
 
 class PmergeMe
 {
-private:
-	PmergeMe(const PmergeMe &);
-	PmergeMe& operator = (const PmergeMe &);
-
 public:	
 	PmergeMe(int argc, char **av);
-	//~PmergeMe();
     void    check_arg(std::string argv);
 	template <typename T> void insertion_sort(T& container);
 	template <typename T> T merge_sort(T& container);

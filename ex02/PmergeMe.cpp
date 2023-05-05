@@ -1,9 +1,5 @@
 #include "PmergeMe.hpp"
 
-//PmergeMe::~PmergeMe() {};
-PmergeMe::PmergeMe(const PmergeMe &) {};
-PmergeMe& PmergeMe::operator = (const PmergeMe &){return *this;};
-
 PmergeMe::PmergeMe (int argc, char **argv) 
 {
     std::vector<int> use_vector;
@@ -30,10 +26,10 @@ PmergeMe::PmergeMe (int argc, char **argv)
     use_deque = merge_sort(use_deque);
     double duration_deque = 1000 * (clock() - init ) / (double) CLOCKS_PER_SEC;
 
-    std::cout << "After :\t\t";
+    std::cout << "After  :\t";
     print_Container(use_vector);
-	std::cout << "\nTime to process a range of " << use_vector.size() << " elements with std::vector : " << duration_vector << std::endl;
-	std::cout << "Time to process a range of " << use_deque.size() << " elements with std::deque : " << duration_deque << std::endl;
+	std::cout << "\nTime to process a range of " << use_vector.size() << " elements with std::vector : \t" << duration_vector << std::endl;
+	std::cout << "Time to process a range of " << use_deque.size() << " elements with std::deque  : \t" << duration_deque << std::endl;
 }
 
 template <typename T> void PmergeMe::insertion_sort(T& container)
@@ -43,43 +39,48 @@ template <typename T> void PmergeMe::insertion_sort(T& container)
 
     while(j < container.size())
 	{
-	  int key = container[j];
-	  int i = j-1;
-
-	  while(i >= 0 && container[i] > key)
-	  {
-		 container[i+1] = container[i];
-		 i--;
-	  }
-	  container[i+1] = key;
-      j++;
+		
+		int key_tmp = container[j];
+		int i = j-1;
+		while(i >= 0 && container[i] > key_tmp)
+		{
+			container[i+1] = container[i];
+			i--;
+		}
+		container[i+1] = key_tmp;
+    	j++;
 	}
 }
 
 
 template <typename T> T PmergeMe::merge_sort(T& container) 
 {
-    for(std::size_t i = 0; i + 1 < container.size(); i+=2)
+    std::size_t i;
+    i = 0;
+    while(i + 1 < container.size())
 	{
 		if (container[i] < container[i + 1])	
 			std::swap(container[i], container[i+1]);
+        i+=2;
 	}
-	T A_cont, B_cont;
-	for(std::size_t i = 0; i < container.size(); i++)
+	T A_tab, B_tab;
+    i = 0;
+	while(i < container.size())
 	{
 		if (i % 2 == 0)
-			B_cont.push_back(container[i]);
+			B_tab.push_back(container[i]);
 		else
-			A_cont.push_back(container[i]);
+			A_tab.push_back(container[i]);
+        i++;
 	}
-	insertion_sort(A_cont);
-	while (A_cont.size() != container.size())
+	insertion_sort(A_tab);
+	while (A_tab.size() != container.size())
 	{
-		A_cont.push_back(B_cont.back());
-		B_cont.pop_back();
-		insertion_sort(A_cont);
+		A_tab.push_back(B_tab.back());
+		B_tab.pop_back();
+		insertion_sort(A_tab);
 	}
-	return A_cont;
+	return A_tab;
 }
 
 template <typename T> void PmergeMe::print_Container(T& container)
@@ -90,7 +91,6 @@ template <typename T> void PmergeMe::print_Container(T& container)
 		std::cout << *it << " ";
         it++;
 	}
-	//std::cout << std::endl;
 }
 
 void PmergeMe::check_arg(std::string argv)
@@ -106,6 +106,6 @@ void PmergeMe::check_arg(std::string argv)
         ++i;
     }
 	int nbr_argv = std::atoi(argv.c_str());
-	if (argv.size() > 10 || nbr_argv > INT_MAX || nbr_argv >= 0)
-        throw std::invalid_argument("bad argument is not POSITIVE INT => " + argv[i] );
+	if (argv.size() > 10 || nbr_argv > INT_MAX || nbr_argv <= 0)
+        throw std::invalid_argument("bad argument is not POSITIVE INT => " + argv );
 }
